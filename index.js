@@ -69,13 +69,15 @@ io.on('connection', (socket) => {
         console.log(user + ' se conectou!')
         const cookies = parse(socket.request.headers.cookie)
         console.log(socket.request.headers)
+        console.log(socket.request.headers.cookie.slice(socket.request.headers.cookie.indexOf('nickname=')).slice(9))
+        console.log(socket.request.headers.cookie.nickname)
     }
     
 
     socket.on('chat message', (msg) => {
         let now = new Date()
         io.emit('chat message', new Message(
-            socket.request.headers.cookie.slice(9),//author
+            socket.request.headers.cookie.slice(socket.request.headers.cookie.indexOf('nickname=')).slice(9),//author
             msg, //message content
             `${now.getUTCHours() - 3}:${now.getUTCMinutes} - ${now.getUTCDate()}/${now.getUTCMonth() + 1}/${now.getUTCFullYear()}`//Time
         ))
