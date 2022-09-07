@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socket.IO chat</title>
+    <link rel="stylesheet" href="base.css">
+    <link rel="stylesheet" href="chat.css">
+  </head>
+  <body>
+    <ul id="messages"></ul>
+    <form id="form" action="">
+      <input id="input" autocomplete="off" /><button>Send</button>
+    </form>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+    if (!document.cookie) window.location.href = '/join'
+    var socket = io();
+
+    var form = document.getElementById('form')
+    var input = document.getElementById('input')
+
+    form.addEventListener('submit', function (e){
+        e.preventDefault()
+
+        if (input.value) {
+            socket.emit('chat message', input.value)
+            input.value = ''
+        }
+    })
+
+    socket.on('chat message', function(message){
+        var item = document.createElement('li')
+        item.innerHTML = `<p class="nickname">${message.author}:</p> <p>${message.content}</p>` // message.author + ': ' + message.content 
+        messages.appendChild(item)
+        window.scrollTo(0, document.body.scrollHeight)
+        console.log(message)
+    })
+    </script>
+  </body>
+</html>
