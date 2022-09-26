@@ -9,6 +9,10 @@
     <link rel="stylesheet" href="chat.css">
   </head>
   <body>
+    <header>
+      <h1>Lithium Chat</h1>
+      <a class="button" href="/join">Change name</a>
+    </header>
     <ul id="messages"></ul>
     <form id="form" action="">
       <input id="input" autocomplete="off" /><button>Send</button>
@@ -16,9 +20,9 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
-    if (!document.cookie) window.location.href = '/join'
+    if (!document.cookie || document.cookie.indexOf('nickname=') == '-1') window.location.href = '/join'
     var socket = io();
-
+      console.log(document.cookie)
     var form = document.getElementById('form')
     var input = document.getElementById('input')
 
