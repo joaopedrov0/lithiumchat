@@ -83,6 +83,7 @@ io.on('connection', (socket) => {
         // console.log(socket.request.headers.cookie.nickname)
 
         console.log('CONECTED USERS ' + currentUsers)
+        io.emit('render online users list', currentUsers)
     }
     
 
@@ -98,6 +99,7 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         console.log('user disconnected (' + socket.request.headers.cookie.slice(socket.request.headers.cookie.indexOf('nickname=')).slice(9) + ')')
         currentUsers.splice(currentUsers.indexOf(socket.request.headers.cookie.slice(socket.request.headers.cookie.indexOf('nickname=')).slice(9)), 1)
+        io.emit('render online users list', currentUsers)
     })
 })
 

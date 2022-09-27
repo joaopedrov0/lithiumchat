@@ -14,11 +14,14 @@
       <a class="button" href="/join">Change name</a>
     </header>
     <div class="dataBox">
+      <div id="onlineBtn" onclick="toggleOnlineList()">0 online</div>
+      <div class="backChatting invisible" onclick="toggleOnlineList()">Return to chat</div>
       <div class="messageBox">
         <ul id="messages"></ul>
       </div>
       <div class="onlineBox">
         <h2>Pessoas online</h2>
+        <h4 id="usersCounter">0 online</h4>
         <div class="displayUsersOnline">
           <ul class="usersOnline">
           </ul>
@@ -55,6 +58,26 @@
         window.scrollTo(0, document.body.scrollHeight)
         console.log(message)
     })
+
+    socket.on('render online users list', function(list){
+      //renderizar a lista
+      var htmlList = ''
+      for(let pos in list){
+        htmlList += `<li>${list[pos]}</li>`
+      }
+      document.querySelector('.usersOnline').innerHTML = htmlList
+      document.querySelector('#usersCounter').innerText = `${list.length} online`
+      document.querySelector('#onlineBtn').innerText = `${list.length} online`
+    })
+
+    function toggleOnlineList(){
+      let onlineList = document.querySelector('.onlineBox')
+      let onlineBtn = document.querySelector('#onlineBtn')
+      let btnBackChatting = document.querySelector('.backChatting')
+      onlineList.classList.toggle('visible')
+      onlineBtn.classList.toggle('invisible')
+      btnBackChatting.classList.toggle('invisible')
+    }
     </script>
   </body>
 </html>

@@ -101,6 +101,7 @@ header > *{
     height: 3rem; 
     box-sizing: border-box; 
     backdrop-filter: blur(10px); 
+    z-index: 1;
 
 }
 #input { 
@@ -154,7 +155,21 @@ ul#messages {
     margin-right: 5px;
 }
 
+#onlineBtn{
+    display: none;
+    padding: 7px;
+    border-radius: 3px;
+    color: #6C63FF;
+    background-color: #fff;
+    top: 50px;
+    right: 5px;
+    position: fixed;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+}
 
+.invisible{
+    display: none !important; 
+}
 
 @media screen and (max-width: 960px){
     #messages > li {
@@ -164,4 +179,53 @@ ul#messages {
     #form {
         height: 3rem;
     }
+
+    .messageBox{
+        width: 100vw;
+    }
+
+    .onlineBox{
+        padding-top: 60px;
+        width: 100vw;
+        display: none;
+        position: absolute;
+    }
+
+    #onlineBtn{
+        display: flex;
+        transition: all ease-in 200ms;
+        z-index: 5;
+    }
+
+    #onlineBtn:hover{
+        cursor: pointer;
+        background-color: #6C63FF;
+        color: white;
+    }
+
+    .onlineBox.visible{
+        display: flex;
+        z-index: 3;
+        
+        backdrop-filter: blur(10px);
+    }
+
+    .displayUsersOnline{
+        width: 70vw;
+        height: 100vw;
+    }
+
+    .backChatting{
+        padding: 7px;
+        border-radius: 3px;
+        color: #6C63FF;
+        background-color: rgba(255, 255, 255, 0.1);;
+        top: 50px;
+        right: 5px;
+        position: fixed;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+        z-index: 5;
+    }
+
+    
 }
