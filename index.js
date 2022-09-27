@@ -65,12 +65,24 @@ io.on('connection', (socket) => {
     console.log('a user connected')
     if (socket.request.headers.cookie){
         console.log('cookie: ' + socket.request.headers.cookie)
-        let user = socket.request.headers.cookie.slice(9)
+        let user = socket.request.headers.cookie.slice(socket.request.headers.cookie.indexOf('nickname=')).slice(9)
+        console.log(user)
+        if (user.indexOf(';')) {
+            user = user.slice(0, user.indexOf(';') + 1)
+        }
+
+        //TEM UM ERRO NOS NOMES, CORTA O PONTO E VIRGULA DIREITO
+
+        console.log('user: ' + user)
+        currentUsers.push(socket.request.headers.cookie.slice(socket.request.headers.cookie.indexOf('nickname=')).slice(9))
+
         console.log(user + ' se conectou!')
         const cookies = parse(socket.request.headers.cookie)
-        console.log(socket.request.headers)
-        console.log(socket.request.headers.cookie.slice(socket.request.headers.cookie.indexOf('nickname=')).slice(9))
-        console.log(socket.request.headers.cookie.nickname)
+        // console.log(socket.request.headers)
+        // console.log(socket.request.headers.cookie.slice(socket.request.headers.cookie.indexOf('nickname=')).slice(9))
+        // console.log(socket.request.headers.cookie.nickname)
+
+        console.log('CONECTED USERS ' + currentUsers)
     }
     
 
@@ -84,7 +96,8 @@ io.on('connection', (socket) => {
     })
 
     socket.on('disconnect', () => {
-        console.log('user disconnected')
+        console.log('user disconnected (' + socket.request.headers.cookie.slice(socket.request.headers.cookie.indexOf('nickname=')).slice(9) + ')')
+        currentUsers.splice(currentUsers.indexOf(socket.request.headers.cookie.slice(socket.request.headers.cookie.indexOf('nickname=')).slice(9)), 1)
     })
 })
 

@@ -2,7 +2,7 @@ body {
     margin: 0; 
     padding-bottom: 3rem; 
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-    overflow-y: scroll;
+    /* overflow-y: scroll; */
     overflow-x: hidden;
 }
 
@@ -29,9 +29,9 @@ header > *{
 
 .button{
     color: white;
-    background-color: #6C63FF;
-    padding: 5px;
-    border-radius: 2px;
+    background-color: #333;
+    padding: 7px;
+    border-radius: 3px;
     font-size: 14px;
     text-decoration: none;
     transition: all ease-in 200ms;
@@ -39,7 +39,55 @@ header > *{
 
 .button:hover{
     cursor: pointer;
-    opacity: 0.8;
+    background-color: #6C63FF;
+}
+
+.dataBox{
+    display: flex;
+    flex-direction: row;
+}
+
+.messageBox{
+    width: 70vw;
+    overflow-y: scroll;
+    max-height: calc(100vh - 45px);
+    bottom: 48px;
+}
+
+.onlineBox{
+    width: 30vw;
+    height: calc(100vh - 45px);
+    bottom: 48px;
+    background-color: rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.displayUsersOnline{
+    margin-top: 20px;
+    height: 50vh;
+    width: 15vw;
+    border-radius: 3px;
+    background-color: rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.usersOnline{
+    list-style: none;
+    padding: 15px;
+}
+
+.usersOnline > li{ 
+    /* background-color: rgba(0, 0, 0, 0.1); */
+    padding: 7px; 
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.usersOnline > li:last-child{
+    border-bottom: none;
 }
 
 #form { 
@@ -87,12 +135,12 @@ ul#messages {
     list-style-type: none; 
     margin: 45px 0 0 0; 
     padding: 0; 
-    overflow-y: scroll;
+    /* overflow-y: scroll; */
 }
 
 #messages > li { 
     padding: 0.5rem 1rem; 
-    overflow: auto;
+    /* overflow: auto; */
     display: flex;
     flex-direction: row;
 }

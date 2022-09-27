@@ -13,9 +13,22 @@
       <h1>Lithium Chat</h1>
       <a class="button" href="/join">Change name</a>
     </header>
-    <ul id="messages"></ul>
+    <div class="dataBox">
+      <div class="messageBox">
+        <ul id="messages"></ul>
+      </div>
+      <div class="onlineBox">
+        <h2>Pessoas online</h2>
+        <div class="displayUsersOnline">
+          <ul class="usersOnline">
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    
     <form id="form" action="">
-      <input id="input" autocomplete="off" /><button>Send</button>
+      <input id="input" autocomplete="off" placeholder="Digite sua mensagem aqui..." /><button>Send</button>
     </form>
 
     <script src="/socket.io/socket.io.js"></script>
