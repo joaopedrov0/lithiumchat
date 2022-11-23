@@ -42,6 +42,14 @@
     var form = document.getElementById('form')
     var input = document.getElementById('input')
 
+    function renderMessage(message){
+        var item = document.createElement('li')
+        item.innerHTML = `<p class="nickname">${message.author}:</p> <p>${message.content}</p>` // message.author + ': ' + message.content 
+        messages.appendChild(item)
+        window.scrollTo(0, document.body.scrollHeight)
+        console.log(message)
+    }
+
     form.addEventListener('submit', function (e){
         e.preventDefault()
 
@@ -52,11 +60,7 @@
     })
 
     socket.on('chat message', function(message){
-        var item = document.createElement('li')
-        item.innerHTML = `<p class="nickname">${message.author}:</p> <p>${message.content}</p>` // message.author + ': ' + message.content 
-        messages.appendChild(item)
-        window.scrollTo(0, document.body.scrollHeight)
-        console.log(message)
+      renderMessage(message)
     })
 
     socket.on('render online users list', function(list){
@@ -68,6 +72,12 @@
       document.querySelector('.usersOnline').innerHTML = htmlList
       document.querySelector('#usersCounter').innerText = `${list.length} online`
       document.querySelector('#onlineBtn').innerText = `${list.length} online`
+    })
+
+    socket.on('render history', function(history){
+      for(let i = 0 ; i < history.length ; i++){
+        renderMessage(history[i])
+      }
     })
 
     function toggleOnlineList(){

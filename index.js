@@ -37,6 +37,7 @@ class Message {
 
 //Application global variables
 var currentUsers = []
+var history = []
 
 // app.get('/', (req, res) => {
 //     // if(req.cookies.nickname === '' || req.cookies.nickname === undefined){
@@ -84,22 +85,30 @@ io.on('connection', (socket) => {
 
         console.log('CONECTED USERS ' + currentUsers)
         io.emit('render online users list', currentUsers)
+        io.emit('render history', history)
     }
     
 
     socket.on('chat message', (msg) => {
         let now = new Date()
-        io.emit('chat message', new Message(
+        var newMessage = new Message(
             socket.request.headers.cookie.slice(socket.request.headers.cookie.indexOf('nickname=')).slice(9),//author
             msg, //message content
             `${now.getUTCHours() - 3}:${now.getUTCMinutes} - ${now.getUTCDate()}/${now.getUTCMonth() + 1}/${now.getUTCFullYear()}`//Time
-        ))
+        )
+        history.push(newMessage)
+        io.emit('chat message', newMessage)
+        if(history.length >= 21){
+            history.shift()
+        }
     })
 
     socket.on('disconnect', () => {
         console.log('user disconnected (' + socket.request.headers.cookie.slice(socket.request.headers.cookie.indexOf('nickname=')).slice(9) + ')')
         currentUsers.splice(currentUsers.indexOf(socket.request.headers.cookie.slice(socket.request.headers.cookie.indexOf('nickname=')).slice(9)), 1)
         io.emit('render online users list', currentUsers)
+
+        console.log('AAAAAAAAAAAAAA----AAAAAAAAAAAA como eu te odeio, ' + JSON.parse(socket.handshake.headers.cookie).nickname) // não funciona
     })
 })
 
@@ -122,5 +131,25 @@ Exibir quem mandou cada mensagem
 Um header que exibe quem está online
 
 Salvar as 20 ultimas mensagens no server para contextualizar quem estiver chegando agora
+
+*/
+
+
+
+
+
+/*
+
+Erros para arrumar
+
+CHAT
+- Os nomes no celular não funcionam
+- Quando alguém entra ou sai do chat, a lista de pessoas online buga
+
+
+LOGIN
+- Ele aceita nomes nulos
+
+
 
 */
