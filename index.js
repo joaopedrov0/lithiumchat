@@ -8,6 +8,19 @@ const io = new Server(server)
 const cookieParser = require('cookie-parser')
 const { parse } = require('cookie')
 
+//em teste
+const session = require('express-session')
+const MemoryStore = require('memorystore')(session)
+
+// New session management with express-session
+
+const store = new MemoryStore({
+    checkPeriod: 86400000 // Verifique se a memória está cheia a cada 24 horas e limpe a sessão mais antiga se necessário
+});
+
+
+
+
 //Message class
 
 class Message {
