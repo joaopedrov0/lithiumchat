@@ -147,8 +147,9 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         console.log('user disconnected (' + socket.request.session.username + ')')
-        currentUsers.splice(currentUsers.indexOf(socket.request.session.username), 1)
+        if (socket.request.session.username) currentUsers.splice(currentUsers.indexOf(socket.request.session.username), 1)
         io.emit('render online users list', currentUsers)
+        console.log('CONECTED USERS ' + currentUsers)
 
         // console.log('AAAAAAAAAAAAAA----AAAAAAAAAAAA como eu te odeio, ' + JSON.parse(socket.handshake.headers.cookie).nickname) // não funciona
     })
