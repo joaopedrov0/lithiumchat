@@ -124,13 +124,13 @@ io.on('connection', (socket) => {
 
         console.log('CONECTED USERS ' + currentUsers)
         io.emit('render online users list', currentUsers)
-        io.emit('render history', history)
+        socket.emit('render history', history)
     } else {
-        io.emit('redirect join page')
+        socket.emit('redirect join page')
     }
-    
 
     socket.on('chat message', (msg) => {
+        if(!socket.request.session.username || socket.request.session.username == undefined || socket.request.session.username == null) return
         console.log('"chat message" event listened')
         let now = new Date()
         var newMessage = new Message(
