@@ -36,7 +36,6 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
-    if (!document.cookie || document.cookie.indexOf('nickname=') == '-1') window.location.href = '/join'
     var socket = io();
       console.log(document.cookie)
     var form = document.getElementById('form')
@@ -78,6 +77,10 @@
       for(let i = 0 ; i < history.length ; i++){
         renderMessage(history[i])
       }
+    })
+
+    socket.on('redirect join page', function(){
+      window.location.href = '/join'
     })
 
     function toggleOnlineList(){

@@ -32,7 +32,6 @@ class Message {
   }
 
 
-
 // //Brasilian hours
 // function fixDate(){
 //     let UTC = new Date()
@@ -47,6 +46,17 @@ class Message {
 
     app.use(cookieParser())
 
+
+    const sessionMiddleware = session({
+        store: store, // Use a store configurada acima
+        secret: 'b8b9e99daee8c9c41ca0520e89d0953f', // Use uma string secreta para assinar a sessão SUBSTITUIR POR UMA VARIÁVEL GLOBAL DE PRODUÇÃO
+        resave: false, // Só salvar a sessão se houver alterações
+        saveUninitialized: false // Só salvar uma sessão nova se houver alterações
+      })
+
+    app.use(sessionMiddleware);
+    const wrap = middleware => (socket, next) => middleware(socket.request, {}, next);
+    io.use(wrap(sessionMiddleware))
 
 //Application global variables
 var currentUsers = []
@@ -68,30 +78,46 @@ app.get('/join', (req, res) => {
 
 app.post('/joining', (req, res) => {
     console.log('perfil criado: ' + req.body.nickname)
-    res.clearCookie()
+    // req.session.destroy((err) => {
+    //     if (err) {
+    //       console.error(err);
+    //       res.send('Ocorreu um erro ao tentar desconectar.');
+    //       return;
+    //     }
+    // });
+
+
     // var nickname = req.body.nickname
     // nickname.toString()
-    res.cookie('nickname', req.body.nickname, {httpOnly: false, maxAge: 1000*60*60*24*7, encode: String})
+    req.session.username = req.body.nickname
+    req.session.save((err) => {
+        if (err) {
+          console.error(err);
+          res.send('Ocorreu um erro ao tentar fazer login.');
+          return;
+        }
+    })
+    // console.log(res)
+    // res.io.socket.request.session.username = req.session.username;
+    // res.io.socket.handshake.accept();
     res.redirect('/')
 })
 
 io.on('connection', (socket) => {
     console.log('a user connected')
-    if (socket.request.headers.cookie){
-        console.log('cookie: ' + socket.request.headers.cookie)
-        let user = socket.request.headers.cookie.slice(socket.request.headers.cookie.indexOf('nickname=')).slice(9)
+    console.log(socket.request.session.username)
+    if (socket.request.session.username){
+        console.log('username: ' + socket.request.session.username)
+        let user = socket.request.session.username
         console.log(user)
-        if (user.indexOf(';')) {
-            user = user.slice(0, user.indexOf(';') + 1)
-        }
 
         //TEM UM ERRO NOS NOMES, CORTA O PONTO E VIRGULA DIREITO
 
         console.log('user: ' + user)
-        currentUsers.push(socket.request.headers.cookie.slice(socket.request.headers.cookie.indexOf('nickname=')).slice(9))
+        currentUsers.push(user)
 
         console.log(user + ' se conectou!')
-        const cookies = parse(socket.request.headers.cookie)
+        // const cookies = parse(socket.request.headers.cookie)
         // console.log(socket.request.headers)
         // console.log(socket.request.headers.cookie.slice(socket.request.headers.cookie.indexOf('nickname=')).slice(9))
         // console.log(socket.request.headers.cookie.nickname)
@@ -99,13 +125,16 @@ io.on('connection', (socket) => {
         console.log('CONECTED USERS ' + currentUsers)
         io.emit('render online users list', currentUsers)
         io.emit('render history', history)
+    } else {
+        io.emit('redirect join page')
     }
     
 
     socket.on('chat message', (msg) => {
+        console.log('"chat message" event listened')
         let now = new Date()
         var newMessage = new Message(
-            socket.request.headers.cookie.slice(socket.request.headers.cookie.indexOf('nickname=')).slice(9),//author
+            socket.request.session.username,//author
             msg, //message content
             `${now.getUTCHours() - 3}:${now.getUTCMinutes} - ${now.getUTCDate()}/${now.getUTCMonth() + 1}/${now.getUTCFullYear()}`//Time
         )
@@ -117,11 +146,11 @@ io.on('connection', (socket) => {
     })
 
     socket.on('disconnect', () => {
-        console.log('user disconnected (' + socket.request.headers.cookie.slice(socket.request.headers.cookie.indexOf('nickname=')).slice(9) + ')')
-        currentUsers.splice(currentUsers.indexOf(socket.request.headers.cookie.slice(socket.request.headers.cookie.indexOf('nickname=')).slice(9)), 1)
+        console.log('user disconnected (' + socket.request.session.username + ')')
+        currentUsers.splice(currentUsers.indexOf(socket.request.session.username), 1)
         io.emit('render online users list', currentUsers)
 
-        console.log('AAAAAAAAAAAAAA----AAAAAAAAAAAA como eu te odeio, ' + JSON.parse(socket.handshake.headers.cookie).nickname) // não funciona
+        // console.log('AAAAAAAAAAAAAA----AAAAAAAAAAAA como eu te odeio, ' + JSON.parse(socket.handshake.headers.cookie).nickname) // não funciona
     })
 })
 
