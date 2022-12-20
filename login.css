@@ -24,6 +24,7 @@ input{
     border-bottom: 1px solid rgba(170, 170, 170, 1.0);
     color: rgba(170, 170, 170, 1.0);
     width: 500px;
+    max-width: 90vw;
     font-size: 32px;
     padding: 5px;
 }
@@ -49,4 +50,21 @@ input{
 
 body{
     background-color: rgb(10, 10, 10);
+}
+
+@media screen and (max-width: 960px){
+    input{
+        width: 300px;
+        font-size: 24px;
+    }
+    .container > *{
+        max-width: 95vw;
+    }
+    h1{
+        font-size: 32px;
+    }
+    h2{
+        font-size: 18px;
+    }
+
 }
